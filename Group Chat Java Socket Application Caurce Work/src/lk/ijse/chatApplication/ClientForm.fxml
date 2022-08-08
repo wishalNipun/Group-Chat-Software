@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClientFormController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.chatApplication.ClientFormController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2c3e50" height="54.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="601.0" />
       <AnchorPane layoutY="356.0" prefHeight="65.0" prefWidth="601.0" style="-fx-background-color: #34495e;">
