@@ -31,7 +31,7 @@ public class ClientFormController {
 
                 while (true){
                     message = dataInputStream.readUTF();
-                    textArea.appendText("\n Server : " + message);
+                    textArea.appendText("\nServer: "+message);
                 }
 
             } catch (IOException e) {
@@ -41,6 +41,7 @@ public class ClientFormController {
     }
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
         dataOutputStream.writeUTF(txtMessage.getText().trim());
+        textArea.appendText("\nMe: "+txtMessage.getText().trim());
         dataOutputStream.flush();
         txtMessage.clear();
     }
