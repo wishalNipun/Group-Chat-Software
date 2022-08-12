@@ -22,7 +22,7 @@ public class ServerApp {
                 thread.start();
             }
         }catch (IOException e){
-
+            closeServerSocket();
         }
     }
 

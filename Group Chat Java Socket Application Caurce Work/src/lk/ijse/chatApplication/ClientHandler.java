@@ -2,9 +2,7 @@ package lk.ijse.chatApplication;
 
 import lk.ijse.chatApplication.model.Log;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -22,10 +20,11 @@ public class ClientHandler implements Runnable{
             this.dataInputStream = new DataInputStream(socket.getInputStream());
 
             clientUserName = dataInputStream.readUTF();
-            sendMessageClientEnter(this," has entered the chat!");
+            sendMessageClientEnter(this," has entered the chat ! ");
             clientHandlers.add(this);
 
         } catch (IOException e) {
+            closeEverything(socket,dataInputStream,dataOutputStream);
             e.printStackTrace();
         }
     }
@@ -40,11 +39,16 @@ public class ClientHandler implements Runnable{
             try {
                 sendMessageClientEnter(this, dataInputStream.readUTF());
             } catch (IOException e) {
-
+                closeEverything(socket,dataInputStream,dataOutputStream);
+                break;
             }
         }
     }
+    public void removeClientHandler(){
+        clientHandlers.remove(this);
+        sendMessageClientEnter(this, " has left the chat ! ");
 
+    }
     private void sendMessageClientEnter(ClientHandler client, String messageTo) {
         for (ClientHandler clientHandler : clientHandlers) {
             try {
@@ -54,8 +58,27 @@ public class ClientHandler implements Runnable{
                 }
 
             } catch (IOException e) {
-
+                closeEverything(socket,dataInputStream,dataOutputStream);
             }
         }
     }
+
+    public void closeEverything(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream){
+        removeClientHandler();
+        try {
+            if (dataInputStream !=null){
+                dataInputStream.close();
+            }
+            if (dataOutputStream!=null){
+                dataOutputStream.close();
+            }
+            if (socket !=null){
+                socket.close();
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }
