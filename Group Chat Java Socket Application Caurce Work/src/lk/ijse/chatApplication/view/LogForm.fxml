@@ -2,11 +2,25 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="loginFormContext" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.chatApplication.controllers.LogFormController">
+<AnchorPane fx:id="loginFormContext" prefHeight="400.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.chatApplication.controllers.LogFormController">
    <children>
-      <JFXTextField fx:id="txtUserName" layoutX="116.0" layoutY="176.0" />
-      <JFXButton layoutX="336.0" layoutY="185.0" onAction="#btnLogOnAction" text="Log In" />
+      <VBox layoutX="16.0" layoutY="17.0" prefHeight="367.0" prefWidth="314.0" style="-fx-background-color: #20c4cb; -fx-background-radius: 2.0em;" />
+      <ImageView fitHeight="96.0" fitWidth="351.0" layoutX="125.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/images/Logicon.png" />
+         </image>
+      </ImageView>
+      <JFXTextField fx:id="txtUserName" focusColor="BLACK" labelFloat="true" layoutX="40.0" layoutY="188.0" prefHeight="45.0" prefWidth="267.0" promptText="User Name" />
+      <JFXButton buttonType="RAISED" layoutX="53.0" layoutY="278.0" onAction="#btnLogOnAction" prefHeight="51.0" prefWidth="239.0" style="-fx-background-color: #2980b9;" text="Log In" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </JFXButton>
    </children>
 </AnchorPane>
