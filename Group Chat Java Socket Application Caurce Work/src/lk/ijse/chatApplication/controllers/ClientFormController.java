@@ -9,15 +9,19 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import lk.ijse.chatApplication.model.Log;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDate;
@@ -29,6 +33,7 @@ public class ClientFormController {
     final int PORT = 1234;
     public ScrollPane scrollPane;
     public VBox vboxMessages;
+    public AnchorPane mainAnchorPane;
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -113,5 +118,22 @@ public class ClientFormController {
         vboxMessages.getChildren().add(hBox);
         dataOutputStream.flush();
         txtMessage.clear();
+    }
+
+    public void btnImageSendOnAction(ActionEvent actionEvent) {
+        FileChooser filechooser = new FileChooser();
+        File file = filechooser.showOpenDialog(mainAnchorPane.getScene().getWindow());
+        System.out.println(file.getPath());
+
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(5,5,5,10));
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        ImageView imageView = new ImageView("file:" + file.getPath());
+        imageView.preserveRatioProperty().set(true);
+        imageView.setFitHeight(250);
+        imageView.setFitWidth(250);
+        TextFlow textFlow = new TextFlow(imageView);
+        hBox.getChildren().add(textFlow);
+        vboxMessages.getChildren().add(hBox);
     }
 }

@@ -1,7 +1,5 @@
 package lk.ijse.chatApplication;
 
-import lk.ijse.chatApplication.model.Log;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
