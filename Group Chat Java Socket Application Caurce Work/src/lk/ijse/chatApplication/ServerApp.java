@@ -7,16 +7,19 @@ import java.net.Socket;
 
 public class ServerApp {
     final int PORT = 1234;
+    final int PORT2 = 1235;
     private ServerSocket serverSocket;
-    public ServerApp(ServerSocket serverSocket){
+    private ServerSocket serverSocket2;
+    public ServerApp(ServerSocket serverSocket,ServerSocket serverSocket2){
+
         this.serverSocket =serverSocket;
+        this.serverSocket2 =serverSocket2;
     }
     public void startServer(){
         try {
             while (!serverSocket.isClosed()){
-                Socket socket = serverSocket.accept();
                 System.out.println("A new client has connected");
-                ClientHandler clientHandler = new ClientHandler(socket);
+                ClientHandler clientHandler = new ClientHandler(serverSocket.accept(),serverSocket2.accept());
 
                 Thread thread = new Thread(clientHandler);
                 thread.start();
@@ -38,7 +41,8 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(1234);
         System.out.println("Server is Running");
-        ServerApp serverApp = new ServerApp(serverSocket);
+        ServerSocket serverSocket2 = new ServerSocket(1235);
+        ServerApp serverApp = new ServerApp(serverSocket,serverSocket2);
         serverApp.startServer();
     }
 

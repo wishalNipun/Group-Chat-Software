@@ -19,10 +19,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import lk.ijse.chatApplication.model.Log;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,20 +28,26 @@ public class ClientFormController {
     public JFXTextField txtMessage;
 
     final int PORT = 1234;
+    final int PORT2 = 1235;
     public ScrollPane scrollPane;
     public VBox vboxMessages;
     public AnchorPane mainAnchorPane;
     Socket socket;
+    Socket socket2;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
+    DataInputStream dataInputStream2;
+    DataOutputStream dataOutputStream2;
     static String username;
     String message = "";
 
     public void initialize() throws IOException {
         socket = new Socket("localhost",PORT);
-
+        socket2 = new Socket("localhost",PORT2);
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
+        dataInputStream2 = new DataInputStream(socket2.getInputStream());
+        dataOutputStream2 = new DataOutputStream(socket2.getOutputStream());
         dataOutputStream.writeUTF(username);
 
         vboxMessages.heightProperty().addListener(new ChangeListener<Number>() {
@@ -75,6 +78,37 @@ public class ClientFormController {
                 closeEverything(socket,dataInputStream,dataOutputStream);
                 e.printStackTrace();
             }
+        }).start();
+        new Thread(() -> {
+            try {
+                while (true){
+                    //  message= dataInputStream2.readUTF();
+                    int readInt = dataInputStream2.readInt();
+                    byte[] bytes = new byte[readInt];
+                    dataInputStream2.readFully(bytes,0,readInt);
+                    FileOutputStream fileOutputStream = new FileOutputStream("F:\\Group Chat Java Socket Application Caurce Work\\Group Chat Java Socket Application Caurce Work\\src\\lk\\ijse\\chatApplication\\assets\\images\\sendImage.png");
+                    fileOutputStream.write(bytes);
+
+                    HBox hBox = new HBox();
+                    hBox.setPadding(new Insets(5,5,5,10));
+                    hBox.setAlignment(Pos.CENTER_LEFT);
+                    ImageView imageView = new ImageView("file:F:\\Group Chat Java Socket Application Caurce Work\\Group Chat Java Socket Application Caurce Work\\src\\lk\\ijse\\chatApplication\\assets\\images\\sendImage.png");
+                    imageView.preserveRatioProperty().set(true);
+                    imageView.setFitHeight(250);
+                    imageView.setFitWidth(250);
+                    TextFlow textFlow = new TextFlow(imageView);
+                    textFlow.setStyle("-fx-background-color: #E5E5EB;"+"-fx-background-radius : 20px;");
+                    textFlow.setPadding(new Insets(5,10,5,10));
+                    hBox.getChildren().add(textFlow);
+
+
+                    addText(hBox);
+
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+
         }).start();
     }
 
@@ -120,10 +154,11 @@ public class ClientFormController {
         txtMessage.clear();
     }
 
-    public void btnImageSendOnAction(ActionEvent actionEvent) {
+    public void btnImageSendOnAction(ActionEvent actionEvent) throws IOException {
         FileChooser filechooser = new FileChooser();
         File file = filechooser.showOpenDialog(mainAnchorPane.getScene().getWindow());
         System.out.println(file.getPath());
+
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(5,5,5,10));
@@ -132,8 +167,19 @@ public class ClientFormController {
         imageView.preserveRatioProperty().set(true);
         imageView.setFitHeight(250);
         imageView.setFitWidth(250);
-        TextFlow textFlow = new TextFlow(imageView);
+        Text text = new Text("Me : \n");
+        text.setFill(Color.WHITE);
+        TextFlow textFlow = new TextFlow(text,imageView);
+        textFlow.setStyle("-fx-background-color: #2980b9;"+"-fx-background-radius : 20px;");
+        textFlow.setPadding(new Insets(5,10,5,10));
+
         hBox.getChildren().add(textFlow);
         vboxMessages.getChildren().add(hBox);
+
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] bytes = new byte[(int) file.length()];
+        fileInputStream.read(bytes);
+        dataOutputStream2.writeInt((int) file.length());
+        dataOutputStream2.write(bytes);
     }
 }

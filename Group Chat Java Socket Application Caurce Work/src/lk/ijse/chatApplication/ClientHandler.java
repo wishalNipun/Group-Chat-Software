@@ -8,14 +8,21 @@ public class ClientHandler implements Runnable{
     public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
+    DataInputStream dataInputStream2;
+    DataOutputStream dataOutputStream2;
     String clientUserName;
     private Socket socket;
+    private Socket socket2;
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(Socket socket,Socket socket2) {
         try {
             this.socket = socket;
             this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
             this.dataInputStream = new DataInputStream(socket.getInputStream());
+
+            this.socket2 = socket2;
+            this.dataOutputStream2 = new DataOutputStream(socket2.getOutputStream());
+            this.dataInputStream2 = new DataInputStream(socket2.getInputStream());
 
             clientUserName = dataInputStream.readUTF();
             sendMessageClientEnter(this," has entered the chat ! ");
@@ -29,7 +36,43 @@ public class ClientHandler implements Runnable{
 
     @Override
     public void run() {
+        IncomingImages();
         IncomingMessage();
+    }
+
+    private void IncomingImages() {
+        new Thread(() -> {
+            while (socket.isConnected()) {
+                try {
+
+                    int readInt = dataInputStream2.readInt();
+                    byte[] bytes = new byte[readInt];
+                    dataInputStream2.readFully(bytes,0,readInt);
+                    sendMessageClientImage(this,readInt,bytes);
+
+                } catch (IOException e) {
+
+                }
+            }
+        }).start();
+    }
+
+    private void sendMessageClientImage(ClientHandler client, int i, byte[] bytes) {
+        for (ClientHandler clientHandler : clientHandlers) {
+            try {
+                if (clientHandler != client) {
+                    //    clientHandler.dataOutputStream.writeUTF(clientUserName);
+                    //  clientHandler.dataOutputStream.flush();
+                    clientHandler.dataOutputStream2.writeInt(i);
+                    clientHandler.dataOutputStream2.write(bytes);
+
+
+                }
+
+            } catch (IOException e) {
+
+            }
+        }
     }
 
     private void IncomingMessage() {
