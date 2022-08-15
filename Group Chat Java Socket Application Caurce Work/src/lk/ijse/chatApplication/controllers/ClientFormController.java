@@ -75,14 +75,14 @@ public class ClientFormController {
 
 
             } catch (IOException e) {
-                closeEverything(socket,dataInputStream,dataOutputStream);
+                closeEverything(socket,dataInputStream,dataOutputStream,dataInputStream2,dataOutputStream2);
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
                 while (true){
-                    //  message= dataInputStream2.readUTF();
+                   // message= dataInputStream.readUTF();
                     int readInt = dataInputStream2.readInt();
                     byte[] bytes = new byte[readInt];
                     dataInputStream2.readFully(bytes,0,readInt);
@@ -96,6 +96,7 @@ public class ClientFormController {
                     imageView.preserveRatioProperty().set(true);
                     imageView.setFitHeight(250);
                     imageView.setFitWidth(250);
+                 //   System.out.println(message);
                     TextFlow textFlow = new TextFlow(imageView);
                     textFlow.setStyle("-fx-background-color: #E5E5EB;"+"-fx-background-radius : 20px;");
                     textFlow.setPadding(new Insets(5,10,5,10));
@@ -117,13 +118,19 @@ public class ClientFormController {
             vboxMessages.getChildren().add(hBox);
         });
     }
-    public void closeEverything(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream){
+    public void closeEverything(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream,DataInputStream dataInputStream2, DataOutputStream dataOutputStream2){
         try {
             if (dataInputStream !=null){
                 dataInputStream.close();
             }
             if (dataOutputStream!=null){
                 dataOutputStream.close();
+            }
+            if (dataInputStream2 !=null){
+                dataInputStream2.close();
+            }
+            if (dataOutputStream2!=null){
+                dataOutputStream2.close();
             }
             if (socket !=null){
                 socket.close();

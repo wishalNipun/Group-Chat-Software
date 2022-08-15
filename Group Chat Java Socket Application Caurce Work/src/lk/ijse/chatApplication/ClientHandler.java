@@ -29,7 +29,7 @@ public class ClientHandler implements Runnable{
             clientHandlers.add(this);
 
         } catch (IOException e) {
-            closeEverything(socket,dataInputStream,dataOutputStream);
+            closeEverything(socket,dataInputStream,dataOutputStream,dataInputStream2,dataOutputStream2);
             e.printStackTrace();
         }
     }
@@ -61,8 +61,8 @@ public class ClientHandler implements Runnable{
         for (ClientHandler clientHandler : clientHandlers) {
             try {
                 if (clientHandler != client) {
-                    //    clientHandler.dataOutputStream.writeUTF(clientUserName);
-                    //  clientHandler.dataOutputStream.flush();
+                   // clientHandler.dataOutputStream.writeUTF(clientUserName);
+                 //   clientHandler.dataOutputStream.flush();
                     clientHandler.dataOutputStream2.writeInt(i);
                     clientHandler.dataOutputStream2.write(bytes);
 
@@ -80,7 +80,7 @@ public class ClientHandler implements Runnable{
             try {
                 sendMessageClientEnter(this, dataInputStream.readUTF());
             } catch (IOException e) {
-                closeEverything(socket,dataInputStream,dataOutputStream);
+                closeEverything(socket,dataInputStream,dataOutputStream,dataInputStream2,dataOutputStream2);
                 break;
             }
         }
@@ -99,12 +99,12 @@ public class ClientHandler implements Runnable{
                 }
 
             } catch (IOException e) {
-                closeEverything(socket,dataInputStream,dataOutputStream);
+                closeEverything(socket,dataInputStream,dataOutputStream,dataInputStream2,dataOutputStream2);
             }
         }
     }
 
-    public void closeEverything(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream){
+    public void closeEverything(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream,DataInputStream dataInputStream2, DataOutputStream dataOutputStream2){
         removeClientHandler();
         try {
             if (dataInputStream !=null){
@@ -112,6 +112,12 @@ public class ClientHandler implements Runnable{
             }
             if (dataOutputStream!=null){
                 dataOutputStream.close();
+            }
+            if (dataInputStream2 !=null){
+                dataInputStream2.close();
+            }
+            if (dataOutputStream2!=null){
+                dataOutputStream2.close();
             }
             if (socket !=null){
                 socket.close();
